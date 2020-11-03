@@ -9,13 +9,13 @@ public class board extends JPanel implements Runnable{
     JLabel done = new JLabel("");
     boolean over = false;   //boolean to check if the path is found
     int col, rows;      //rows and column of the maze
-    int width = 18;     //universal width of the cell
+    int width = 15;     //universal width of the cell
     public boolean paint = false;   //to paint on the panel
     Stack<cell> st = new Stack<>();     //stack for constructing maze
     Stack<cell> Solvestack = new Stack<>(); //stack for solving maze
 
     cell current;   //current cell
-    int speed;//speed of the maze generation and solving path
+    int speed =50;//speed of the maze generation and solving path
     //2-D array to store the maze information
     public ArrayList<ArrayList<cell> > arr = new ArrayList<ArrayList<cell> >();
 
