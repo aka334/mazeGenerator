@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class cell{
-    int i, j, width;        //A position to define cell
+    int i, j, width;        // A position to define cell
     boolean walls[];    //walls of a cell
     boolean Visited;    //boolean to check if the cell has been visited or not
     boolean solveVisited, solveBacktracker; //boolean value to store while solving the maze
