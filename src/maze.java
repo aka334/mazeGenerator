@@ -11,11 +11,13 @@ public class maze {
     int row = 50;
     int col = 50;
     board bd;
+    //Constructor of maze
     maze(){
-
+        //frame for the program
         JFrame controlFrame = new JFrame("MAZE");
         controlFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Creating a board
         bd = new board(row, col);
         //Grid Bag Layouting for controller
         JPanel pane = new JPanel();
@@ -32,6 +34,7 @@ public class maze {
         c.gridy = 0;
         pane.add(speed,c);
         JSlider speedsldr = new JSlider(10,100, 50);
+        //Changing the speed
         speedsldr.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -55,6 +58,7 @@ public class maze {
         c.gridy = 2;
         pane.add(rowlabel,c);
         JSlider rowsldr = new JSlider(10,50, 50);
+        //Changing the row info
         rowsldr.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -79,6 +83,7 @@ public class maze {
         c.gridy = 4;
         pane.add(collabel,c);
         JSlider colsldr = new JSlider(10,50, 50);
+        //Changing the col info
         colsldr.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
