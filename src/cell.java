@@ -4,7 +4,7 @@ import java.awt.*;
 public class cell{
     int i, j, width;        // A position to define cell
     boolean walls[];    //walls of a cell
-    boolean Visited;    //boolean to check if the cell has been visited or not
+    boolean Visited;    //boolean to check if the cell  has been visited or not
     boolean solveVisited, solveBacktracker; //boolean value to store while solving the maze
     //stroke for incresing line width
     Stroke stroke1 = new BasicStroke(3f);
@@ -19,6 +19,7 @@ public class cell{
         this.solveVisited =false;
         this.solveBacktracker = false;
     }
+    
     //Draw method for cell
     void draw(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
