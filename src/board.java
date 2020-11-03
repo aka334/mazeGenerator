@@ -4,18 +4,22 @@ import java.util.*;
 import java.util.List;
 
 public class board extends JPanel implements Runnable{
+    //Label for footer
     JLabel info = new JLabel("Visited" + " " + visited() + "%");
     JLabel done = new JLabel("");
-    boolean over = false;
-    int col, rows;
-    int width = 15;
-    public boolean paint = false;
-    Stack<cell> st = new Stack<>();
-    Stack<cell> Solvestack = new Stack<>();
+    boolean over = false;   //boolean to check if the path is found
+    int col, rows;      //rows and column of the maze
+    int width = 18;     //universal width of the cell
+    public boolean paint = false;   //to paint on the panel
+    Stack<cell> st = new Stack<>();     //stack for constructing maze
+    Stack<cell> Solvestack = new Stack<>(); //stack for solving maze
 
-    cell current;
-    int speed = 25;
+    cell current;   //current cell
+    int speed;//speed of the maze generation and solving path
+    //2-D array to store the maze information
+    public ArrayList<ArrayList<cell> > arr = new ArrayList<ArrayList<cell> >();
 
+    //Constructor of the board method
     board(int r, int c){
         this.col = c;
         this.rows = r;
@@ -23,16 +27,19 @@ public class board extends JPanel implements Runnable{
         done.setForeground(Color.WHITE);
         setup();
     }
+    // Method to set speed
     void setSpeed(int s){
         speed = s;
     }
+    //Method to set Rows of the maze
     void setRows(int r){
         this.rows = r;
     }
+    //Method to set Column of the maze
     void setCol(int c){
         this.col = c;
     }
-    public ArrayList<ArrayList<cell> > arr = new ArrayList<ArrayList<cell> >();
+    //Setuo of the code
     void setup(){
 
         //Initializing the position of each cell
@@ -45,20 +52,23 @@ public class board extends JPanel implements Runnable{
                 arr.get(i).add(temp);
             }
         }
+        //Setting current cell to the beginning
         current = arr.get(0).get(0);
 
     }
-    boolean solve = false;
+    boolean solve = false;//for solve method
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
+        //if path found
         if(over){
             done.setText("PATH FOUND!");
         }
+
         info.setText("Visited" + " " + visited()+ "%");
         g.setColor(Color.BLACK);
+        //draw on the screen with the cell settings
         if(paint){
             //Drawing each cell in the board by iterating over it
             for( int i = 0; i < col; i++){
@@ -70,13 +80,17 @@ public class board extends JPanel implements Runnable{
                 }
             }
         }
+        //Goes here when solve is pressed
         if(solve){
+            //Iterating through the array
             for( int i = 0; i < col; i++){
                 for(int j = 0; j < rows; j++) {
                     if(arr.get(i).get(j).solveVisited) {
                         arr.get(i).get(j).highlight(g, new Color(75,0,130), this.width);
                         arr.get(i).get(j).draw(g);
+                        
                         if(arr.get(i).get(j).solveBacktracker) {
+                            //Backtracking 
                             arr.get(i).get(j).highlight(g, new Color(135,206,235), this.width);
                             arr.get(i).get(j).draw(g);
                         }
@@ -84,21 +98,26 @@ public class board extends JPanel implements Runnable{
                 }
             }
         }
+        //Highhlighting start and end with blue and red color
         arr.get(0).get(0).highlight(g, Color.BLUE, this.width-2);     //Start
         arr.get(this.col-1).get(this.rows-1).highlight(g,Color.red, this.width-2);//end
     }
+    //Thread for solve method
     Thread th1 = new Thread(this::run1);
     public void solver(){th1.start();}
     boolean stopper = true;
+    //run1 for the solve thread
     public void run1(){
         this.current = arr.get(0).get(0);
+        //while stack is empty
         do{
             if(stopper) {
                 try {
-                    Thread.sleep(speed);
+                    Thread.sleep(speed);    //speed of drawing
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                
                 if (solveDFS()) {
                     over = true;
                     repaint();
@@ -113,13 +132,12 @@ public class board extends JPanel implements Runnable{
     }
 
     boolean  solveDFS(){
-
+        //Current cell
         this.current.solveVisited = true;
         //Step 1
         if(this.current != arr.get(this.col-1).get(this.rows-1)) {
             cell next = checkneighborSolve(this.current);
             if (next != null) {
-
                 next.solveVisited = true;
                 //Step 2
                 Solvestack.push(this.current);
@@ -136,6 +154,8 @@ public class board extends JPanel implements Runnable{
         return true;
     }
 
+    //Checking Neighbors while Solving
+    //Prefers right in the beginning and chooses a random path when there is no right option
     cell checkneighborSolve(cell curr){
         List<cell> neighbors = new ArrayList<cell>();
         int tp = index(curr.i ,(curr.j - 1)); //top
@@ -171,6 +191,7 @@ public class board extends JPanel implements Runnable{
             }
         }
         if(!neighbors.isEmpty()){
+            //random from other 3 paths
             Random rand = new Random();
             cell randomElement = neighbors.get(rand.nextInt(neighbors.size()));
             return randomElement;
@@ -178,11 +199,11 @@ public class board extends JPanel implements Runnable{
             return null;//dummmy cell
         }
     }
-
+    //Thread for Generating the maze
     Thread th = new Thread(this);
     public void clicked(){th.start();}
     public void run(){
-
+        //Until stack is empty
         do{
 
             try {
@@ -198,7 +219,7 @@ public class board extends JPanel implements Runnable{
         repaint();
 
     }
-    //For Constructing a MAZE
+    //For Constructing a MAZE using DFS algorithm
     private void dfs() {
         this.current.Visited = true;
         //Step 1
@@ -217,12 +238,14 @@ public class board extends JPanel implements Runnable{
             this.current = st.pop();
         }
     }
+    //Calculate the edge case
     int index(int i, int j){
         if (i < 0 || j < 0 || i >= this.col || j >= this.rows) {
             return -1;
         }
         return 0;
     }
+    //check neighbors and return random cell among 4 cells
     cell checkNeighbors(){
         List<cell> neighbors = new ArrayList<cell>();
 
@@ -264,7 +287,7 @@ public class board extends JPanel implements Runnable{
         }
 
     }
-
+    //Remove walls between cell a and b
     private void removeWalls(cell a, cell b){
         int x = a.i - b.i;
         int y = a.j - b.j;
@@ -284,6 +307,7 @@ public class board extends JPanel implements Runnable{
         }
 
     }
+    //Calculate the percentage of visited cells
     float visited(){
         int count = 0;
         for( int i = 0; i < col; i++){
